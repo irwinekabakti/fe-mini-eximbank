@@ -6,27 +6,32 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 
-const ForgetPassword: FC = () => {
-  const initialValues = { email: "" };
+
+const ResetPassword: FC = () => {
+  const initialValues = { token: "", newPassword: "" };
   const navigate = useNavigate()
 
   const validationSchema = Yup.object({
-    email: Yup.string()
-      .email("Invalid email format")
-      .required("Email is required"),
+    token: Yup.string().required("Reset token is required"),
+    newPassword: Yup.string()
+      .min(8, "Password must be at least 8 characters")
+      .required("New password is required"),
   });
 
-  const handleSubmit = async (values: { email: string }, { setSubmitting, setStatus }: any) => {
+  const handleSubmit = async (
+    values: { token: string; newPassword: string },
+    { setSubmitting, setStatus }: any
+  ) => {
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/v1/forgot-password?email=${values.email}`
+        `http://localhost:8080/api/v1/reset-password?token=${values.token}&newPassword=${values.newPassword}`
       );
       setStatus({ success: response.data });
-      toast.success("Input your token and new password!");
+      toast.success("Password changed successfully! Please relogin.");
       setTimeout(() => {
-        navigate('/reset-password')
+        navigate('/sign-in')
       }, 500)
-    //   navigate('/reset-password')
+      // navigate('/sign-in')
     } catch (err: any) {
       setStatus({ error: err.response?.data || "An error occurred." });
     } finally {
@@ -37,7 +42,7 @@ const ForgetPassword: FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-6 w-96">
-        <h2 className="text-2xl font-bold mb-4 text-center">Forgot Password</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">Reset Password</h2>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -48,14 +53,24 @@ const ForgetPassword: FC = () => {
               {status?.success && <Alert severity="success">{status.success}</Alert>}
               {status?.error && <Alert severity="error" className="mt-2">{status.error}</Alert>}
               <Field
-                name="email"
+                name="token"
                 as={TextField}
-                label="Email"
-                type="email"
+                label="Reset Token"
                 fullWidth
                 variant="outlined"
                 className="mb-4"
-                helperText={<ErrorMessage name="email" />}
+                helperText={<ErrorMessage name="token" />}
+                error={!!status?.error}
+              />
+              <Field
+                name="newPassword"
+                as={TextField}
+                label="New Password"
+                type="password"
+                fullWidth
+                variant="outlined"
+                className="mb-4"
+                helperText={<ErrorMessage name="newPassword" />}
                 error={!!status?.error}
               />
               <Button
@@ -65,7 +80,7 @@ const ForgetPassword: FC = () => {
                 type="submit"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? <CircularProgress size={24} /> : "Send Reset Email"}
+                {isSubmitting ? <CircularProgress size={24} /> : "Reset Password"}
               </Button>
             </Form>
           )}
@@ -75,4 +90,4 @@ const ForgetPassword: FC = () => {
   );
 };
 
-export default ForgetPassword;
+export default ResetPassword;

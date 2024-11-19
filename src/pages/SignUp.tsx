@@ -6,6 +6,8 @@ import { registerUser } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 const SignUp: FC = () => {
+  const navigate = useNavigate()
+
     const handleSignUp = async (values: any) => {
         try {
           const response = await registerUser(values);
@@ -18,10 +20,8 @@ const SignUp: FC = () => {
         }
       };
 
-      const navigate = useNavigate()
-
       const toSignIn = () => {
-        navigate('/')
+        navigate('/sign-in')
       }
 
   return (
@@ -62,6 +62,22 @@ const SignUp: FC = () => {
 
             <Field name="dateOfBirth" as={TextField} label="Date of Birth" type="date" InputLabelProps={{ shrink: true }} fullWidth />
             <ErrorMessage name="dateOfBirth" component="div" className="text-red-500 text-sm" />
+
+{/* <Field
+  name="dateOfBirth"
+  as={TextField}
+  label="Date of Birth"
+  type="date"
+  InputLabelProps={{ shrink: true }}
+  fullWidth
+  onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+    const value = e.target.value; 
+    if (value) {
+      const [yyyy, mm, dd] = value.split("-"); // Parse the ISO-8601 date format
+      e.target.value = `${dd}/${mm}/${yyyy}`; // Reformat to dd/mm/yyyy
+    }
+  }}
+/> */}
 
             <Field name="phoneNumber" as={TextField} label="Phone Number" fullWidth />
             <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-sm" />
