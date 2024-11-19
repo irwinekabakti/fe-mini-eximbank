@@ -10,25 +10,18 @@ import {
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import ForgetPassword from './pages/ForgetPassword';
+import ResetPassword from './pages/ResetPassword';
+import Homepage from './pages/Homepage';
 
 const App = () => {
-
   return (
-  // <>
-
-  //   <RouterProvider
-  //   future={{
-  //   v7_startTransition: true,
-  // }} 
-  
-  // router={router} />
-  // </>
-  
   <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SignIn />} />
+        <Route path="/" element={<Homepage />} />
+        <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path='/forget-password' element={<ForgetPassword />} />
+        <Route path='/reset-password' element={<ResetPassword />} />
       </Routes>
     </BrowserRouter>
   )
